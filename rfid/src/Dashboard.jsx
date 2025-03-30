@@ -12,7 +12,7 @@ function Dashboard({ setIsLoggedIn }) {
   // Fetch data from backend
   const fetchData = async () => {
     try {
-      const scansResponse = await fetch('http://localhost:5000/api/scans');
+      const scansResponse = await fetch('http://localhost:5001/api/scans');
       const scansData = await scansResponse.json();
       setScans(scansData);
     } catch (error) {
@@ -22,7 +22,7 @@ function Dashboard({ setIsLoggedIn }) {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(fetchData, 2000); // Poll every 2 seconds (optimized from 5s)
+    const interval = setInterval(fetchData, 2000);
     return () => clearInterval(interval);
   }, []);
 
@@ -34,7 +34,7 @@ function Dashboard({ setIsLoggedIn }) {
       return;
     }
 
-    const response = await fetch('http://localhost:5000/api/scan', {
+    const response = await fetch('http://localhost:5001/api/scan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ rfid, name })
@@ -48,7 +48,7 @@ function Dashboard({ setIsLoggedIn }) {
     }
     setRfid('');
     setName('');
-    fetchData(); // Immediate refresh after scan
+    fetchData();
   };
 
   // Logout function
@@ -56,6 +56,17 @@ function Dashboard({ setIsLoggedIn }) {
     setIsLoggedIn(false);
     navigate('/login');
     setToast({ type: 'success', message: 'Logged out successfully!' });
+  };
+
+  // Function to format timestamp
+  const formatTime = (timestamp) => {
+    if (!timestamp) return '-';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      second: '2-digit' 
+    }) + ' ' + date.toLocaleDateString();
   };
 
   return (
@@ -109,8 +120,8 @@ function Dashboard({ setIsLoggedIn }) {
             <tr key={scan.key}>
               <td>{scan.name}</td>
               <td>{scan.class}</td>
-              <td>{scan.boardingTime || '-'}</td>
-              <td>{scan.dropOffTime || '-'}</td>
+              <td>{formatTime(scan.boardingTime)}</td>
+              <td>{formatTime(scan.dropOffTime)}</td>
               <td>{scan.smsSent ? 'Yes' : 'No'}</td>
             </tr>
           ))}

@@ -2,7 +2,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const app = express();
-const port = 5000;
+const port=  5001;
 
 
 const serviceAccount = require('./serviceAccountKey.json'); 
