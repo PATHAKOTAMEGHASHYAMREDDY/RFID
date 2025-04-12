@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Login from './Login';
 import Dashboard from './Dashboard';
 import './App.css';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+  
+  // Update localStorage when login state changes
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn);
+  }, [isLoggedIn]);
 
   return (
     <Router>
       <Routes>
         <Route
           path="/login"
-          element={<Login setIsLoggedIn={setIsLoggedIn} />}
+          element={isLoggedIn ? <Navigate to="/dashboard" /> : <Login setIsLoggedIn={setIsLoggedIn} />}
         />
         <Route
           path="/dashboard"
@@ -20,7 +27,7 @@ function App() {
         />
         <Route
           path="/"
-          element={<Navigate to="/login" />}
+          element={isLoggedIn ? <Navigate to="/dashboard" /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
