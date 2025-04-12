@@ -15,7 +15,7 @@ function Dashboard({ setIsLoggedIn }) {
   const fetchData = async () => {
     try {
       // Fetch attendance data from the new endpoint
-      const attendanceResponse = await fetch('http://localhost:5001/api/attendance');
+      const attendanceResponse = await fetch('https://rfid-api.vercel.app/api/attendance');
       const attendanceData = await attendanceResponse.json();
       setAttendanceData(attendanceData);
     } catch (error) {
@@ -37,7 +37,7 @@ function Dashboard({ setIsLoggedIn }) {
       return;
     }
 
-    const response = await fetch('http://localhost:5001/api/scan', {
+    const response = await fetch('https://rfid-api.vercel.app/api/scan', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ rfid, name })
@@ -78,7 +78,7 @@ function Dashboard({ setIsLoggedIn }) {
       
       try {
         // Call the reset-all endpoint which resets everything at once
-        const response = await fetch('http://localhost:5001/api/reset-all', {
+        const response = await fetch('https://rfid-api.vercel.app/api/reset-all', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' }
         });
